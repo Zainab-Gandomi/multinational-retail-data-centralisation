@@ -19,3 +19,10 @@ class DatabaseConnector:
         engine = create_engine(f"postgresql+psycopg2://{data_2['RDS_USER']}:{data_2['RDS_PASSWORD']}@{data_2['RDS_HOST']}:{data_2['RDS_PORT']}/{data_2['RDS_DATABASE']}")
         return engine
 
+    def list_db_tables(self):
+        inspector = inspect(self.init_db_engine())
+        return inspector.get_table_names()
+    
+
+
+    
