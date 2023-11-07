@@ -37,10 +37,6 @@ class DataExtractor:
 
 
 
-
-
-
-
 '''
     def extract_data_from_csv(self, file_path):
         pass
