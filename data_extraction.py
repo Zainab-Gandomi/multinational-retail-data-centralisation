@@ -32,6 +32,8 @@ class DataExtractor:
         df = pd.read_sql_table(table,con)
         # print(df.columns)
         return df
+    
+
 
 
 

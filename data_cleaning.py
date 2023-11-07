@@ -2,7 +2,10 @@ import pandas as pd  # appropriate libraries for data cleaning
 
 class DataCleaning:
 
-    def __init__(self):
-        # Initialize any necessary configuration or parameters for data cleaning here
-        pass
 
+   def clean_user_data(self,df):
+        df = self.clean_invalid_date(df,'date_of_birth')
+        df = self.clean_invalid_date(df,'join_date')        
+        df = self.clean_NaNs_Nulls_misses(df)
+        df.drop(columns='1',inplace=True)
+        return df
