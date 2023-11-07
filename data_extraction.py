@@ -1,11 +1,7 @@
-import csv             # for extract data from csv file
-import requests        # for extract data from AIP
-import boto3           # for extract data from AWS S3 
 import pandas as pd
 import yaml
 import sqlalchemy as db
-from data_cleaning import DataCleaning
-
+import tabula as tb
 
 class DataExtractor:
     def __init__(self):
@@ -32,6 +28,11 @@ class DataExtractor:
         df = pd.read_sql_table(table,con)
         # print(df.columns)
         return df
+    
+    def retrieve_pdf_data(self,link):
+        pdf_data = tb.read_odf(link, pages = 'all')
+        df_pdf = pd.concat(pdf_data)
+        return df_pdf
     
 
 
