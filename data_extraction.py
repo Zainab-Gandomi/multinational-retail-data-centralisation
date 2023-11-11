@@ -1,51 +1,55 @@
 import pandas as pd
-import yaml
-import sqlalchemy as db
-import tabula as tb
+import database_utils as du
+
+init_data = du.DatabaseConnector('db_creds.yaml')
+db_read = init_data.read_db_creds()
+db_engine = init_data.init_db_engine()
 
 class DataExtractor:
-    def __init__(self):
-        pass
+    def __init__(self, table_name):
+        self.table_name = table_name
 
-    def read_creds(self,yaml_file):
-        with open(yaml_file, 'r') as file:
-            self.credentials = yaml.safe_load(file)
-            return self.credentials
+    def read_rds_table(self):
+        user_data_df = pd.read_sql_table(self.table_name, db_engine)
+        df_col = user_data_df.columns
+        column_names_list = list(df_col)
+        print(column_names_list)
+        return user_data_df  
 
-    def init_db_engine(self,creds):
-        db_uri = f"postgresql+psycopg2://{creds['RDS_USER']}:{creds['RDS_PASSWORD']}@{creds['RDS_HOST']}:{creds['RDS_PORT']}/{creds['RDS_DATABASE']}"
-        engine = db.create_engine(db_uri)
-        conn = engine.connect()
-        return conn
+   
+db_connector = DataExtractor('legacy_users')
 
-    def read_data(self,conn):
-        inspector = db.inspect(conn)
-        tables = inspector. get_table_names()
-        print(tables)
-        return tables
+df = db_connector.read_rds_table()
+print(df)
 
-    def read_rds_tables(self,con,table):
-        df = pd.read_sql_table(table,con)
-        # print(df.columns)
-        return df
-    
-    def retrieve_pdf_data(self,link):
-        pdf_data = tb.read_odf(link, pages = 'all')
-        df_pdf = pd.concat(pdf_data)
-        return df_pdf
-    
 
 
 
 
 '''
-    def extract_data_from_csv(self, file_path):
-        pass
+import tabula as tb
+import requests
 
-    def extract_data_from_api(self, url):
-        pass
+    def retrieve_pdf_data(self,link):
+        pdf_data = tb.read_odf(link, pages = 'all')
+        df_pdf = pd.concat(pdf_data)
+        return df_pdf
+    
+    def list_number_of_stores(self,endpoint,dictionary):
+        r = requests.get(endpoint,headers = dictionary)
+        output = r.json()
+        return output['number_stores']
 
-    def extract_data_from_s3_bucket(self, bucket_name, object_key):
-        pass
-        
+    def retrieve_stores_data(self):
+        list_of_frames = []
+        store_number   = self.list_number_of_stores()
+        for _ in range(store_number):
+            api_url_base = f'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{_}'
+            response = requests.get(
+                                    api_url_base,
+                                    headers=self.API_key()
+                                    )
+            list_of_frames.append( pd.json_normalize(response.json()))
+        return pd.concat(list_of_frames)
+
 '''
