@@ -29,13 +29,7 @@ class DatabaseConnector:
 #['legacy_store_details', 'legacy_users', 'orders_table']
 
     def upload_to_db(self, df, table_name):
-        database_type = 'postgresql'
-        dbapi = 'psycopg2'
-        host = 'localhost'
-        user = 'postgres'
-        password = 'Alireza13'
-        database = 'sales_data'
-        port = 5432
+
 
         engine = create_engine(f"{database_type}+{dbapi}://{user}:{password}@{host}:{port}/{database}")
         """
@@ -51,7 +45,7 @@ class DatabaseConnector:
             return False
 
 # Create an instance of DatabaCleaning for upload df
-init_data = dc.DataCleaning('legacy_users')
+init_data = .DataCleaning('legacy_users')
 df = init_data.clean_user_data()
 
 # Create an instance of DatabaseConnector

@@ -1,0 +1,7 @@
+database_type : postgresql
+dbapi : psycopg2
+host : localhost
+user : postgres
+password : Alireza13
+database : sales_data
+port : 5432
