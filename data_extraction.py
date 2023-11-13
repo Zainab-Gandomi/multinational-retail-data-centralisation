@@ -1,5 +1,5 @@
-
 import pandas as pd
+import tabula
 
 class DataExtractor:
 
@@ -9,9 +9,15 @@ class DataExtractor:
     def read_rds_table(self,engine,table_name):
         with engine.begin() as conn:
             return pd.read_sql_table(table_name, con=conn)
+            #end of task 3
+
+    def retrieve_pdf_data(self,link):
+        return pd.concat(tabula.read_pdf(link, pages='all'))            
 
 
-
+init_data = DataExtractor()
+df_pdf = init_data.retrieve_pdf_data("https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf")
+print (df_pdf)
 
 '''
 import pandas as pd

@@ -1,19 +1,23 @@
 import pandas as pd
 import numpy as np
-import re
 
 
 class DataCleaning:
     
     def clean_user_data(self,df):
-        
         df = self.clean_invalid_date(df,'date_of_birth')
         df = self.clean_invalid_date(df,'join_date')  
-
         df = df.dropna()
-        
         df.drop(columns='index',inplace=True)
         return df
+    
+    def clean_card_data(self,df):
+        df['card_number'] = df['card_number'].apply(str)
+        df['card_number'] = df['card_number'].replace("?", "")
+        df = self.clean_invalid_date(df,'date_payment_confirmed')  
+        df.dropna(how="any", inplace =True)
+        return df
+    
 
     def clean_invalid_date(self,df, column_name):
         df[column_name] = pd.to_datetime(df[column_name], errors='coerce')

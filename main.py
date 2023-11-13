@@ -2,15 +2,13 @@ import pandas as pd
 from database_utils  import DatabaseConnector 
 from data_extraction import DataExtractor  
 from data_cleaning   import DataCleaning 
-import sqlalchemy
 
 
 def upload_dim_users():
     de = DataExtractor()
     db = DatabaseConnector()
     dc = DataCleaning()
-    # connect to base and get list of frames
-    #cred = db.read_db_creds("db_creds.yaml") 
+    # connect to base and get list of frames 
     engine = db.init_db_engine("db_creds.yaml")
     engine.connect()
     tables_list = db.list_db_tables(engine)
@@ -18,10 +16,31 @@ def upload_dim_users():
     df_name = tables_list[1]
     df = dc.clean_user_data(de.read_rds_table( engine, df_name))
     # upload to the db
-    #cred_upload = db.read_db_creds("db_creds_upload.yaml") 
     engine = db.init_db_engine("db_creds_upload.yaml")
     engine.connect()
     db.upload_to_db(df,'dim_users',engine)
 
+def upload_dim_card_details():
+    de = DataExtractor()
+    db = DatabaseConnector()
+    dc = DataCleaning()
+    # connect to link to retrieve data
+    pdf_data = de.retrieve_pdf_data("https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf")
+    #clean data
+    df = dc.clean_card_data(pdf_data)
+    #cred_upload = db.read_db_creds("db_creds_upload.yaml") 
+    engine = db.init_db_engine("db_creds_upload.yaml")
+    engine.connect()
+    db.upload_to_db(df,'dim_card_details',engine)
 
-upload_dim_users()
+upload_dim_card_details()
+
+
+
+
+
+
+
+
+
+#upload_dim_users()
