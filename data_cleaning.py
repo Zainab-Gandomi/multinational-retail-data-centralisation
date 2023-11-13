@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+import re
 
 class DataCleaning:
     
@@ -17,15 +17,20 @@ class DataCleaning:
         df = self.clean_invalid_date(df,'date_payment_confirmed')  
         df.dropna(how="any", inplace =True)
         return df
-    
 
     def clean_invalid_date(self,df, column_name):
         df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
         return df
 
+    def called_clean_store_data(self,df):
+        df.drop(columns='lat',inplace=True)
+        df =  self.clean_invalid_date(df,'opening_date')                     
+        df['staff_numbers'] =  pd.to_numeric( df['staff_numbers'].apply(self.remove_char_from_string),errors='coerce', downcast="integer") 
+        df.dropna(subset = ['staff_numbers'],how='any',inplace= True)
+        return df
 
-
-
+    def remove_char_from_string(self,value):
+        return re.sub(r'\D', '',value)
 
 '''
 import pandas as pd
