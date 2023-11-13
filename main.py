@@ -15,7 +15,7 @@ def upload_dim_users():
     # get clean chosen frame
     df_name = tables_list[1]
     df = dc.clean_user_data(de.read_rds_table( engine, df_name))
-    # upload to the db
+    # upload datato the db
     engine = db.init_db_engine("db_creds_upload.yaml")
     engine.connect()
     db.upload_to_db(df,'dim_users',engine)
@@ -28,12 +28,28 @@ def upload_dim_card_details():
     pdf_data = de.retrieve_pdf_data("https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf")
     #clean data
     df = dc.clean_card_data(pdf_data)
-    #cred_upload = db.read_db_creds("db_creds_upload.yaml") 
+    #upload data to the db
     engine = db.init_db_engine("db_creds_upload.yaml")
     engine.connect()
     db.upload_to_db(df,'dim_card_details',engine)
 
-upload_dim_card_details()
+
+def upload_dim_store_details():
+    de = DataExtractor()
+    db = DatabaseConnector()
+    dc = DataCleaning()  
+    # get data
+    df = de.retrieve_stores_data()
+    print(df[df['store_code']=='WEB-1388012W'])
+    df.to_csv('dim_store_details.csv')
+    # clean data 
+    df = dc.called_clean_store_data(df)
+    # upload to db 
+    engine = db.init_db_engine("db_creds_upload.yaml")
+    engine.connect()
+    db.upload_to_db(df,'dim_store_details',engine)
+
+upload_dim_store_details()    
 
 
 
@@ -43,4 +59,8 @@ upload_dim_card_details()
 
 
 
+
+
+
+#upload_dim_card_details()
 #upload_dim_users()
