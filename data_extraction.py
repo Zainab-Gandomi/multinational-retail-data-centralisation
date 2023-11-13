@@ -1,9 +1,25 @@
+
+import pandas as pd
+
+class DataExtractor:
+
+    def __init__(self):
+        pass
+
+    def read_rds_table(self,engine,table_name):
+        with engine.begin() as conn:
+            return pd.read_sql_table(table_name, con=conn)
+
+
+
+
+'''
 import pandas as pd
 import database_utils as du
 
-init_data = du.DatabaseConnector('db_creds.yaml')
-db_read = init_data.read_db_creds()
-db_engine = init_data.init_db_engine()
+#init_data = du.DatabaseConnector('db_creds.yaml')
+#db_read = init_data.read_db_creds()
+#db_engine = init_data.init_db_engine()
 
 class DataExtractor:
     def __init__(self, table_name):
@@ -22,34 +38,5 @@ db_connector = DataExtractor('legacy_users')
 df = db_connector.read_rds_table()
 print(df)
 
-
-
-
-
-'''
-import tabula as tb
-import requests
-
-    def retrieve_pdf_data(self,link):
-        pdf_data = tb.read_odf(link, pages = 'all')
-        df_pdf = pd.concat(pdf_data)
-        return df_pdf
-    
-    def list_number_of_stores(self,endpoint,dictionary):
-        r = requests.get(endpoint,headers = dictionary)
-        output = r.json()
-        return output['number_stores']
-
-    def retrieve_stores_data(self):
-        list_of_frames = []
-        store_number   = self.list_number_of_stores()
-        for _ in range(store_number):
-            api_url_base = f'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{_}'
-            response = requests.get(
-                                    api_url_base,
-                                    headers=self.API_key()
-                                    )
-            list_of_frames.append( pd.json_normalize(response.json()))
-        return pd.concat(list_of_frames)
 
 '''

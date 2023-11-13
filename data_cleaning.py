@@ -1,4 +1,30 @@
 import pandas as pd
+import numpy as np
+import re
+
+
+class DataCleaning:
+    
+    def clean_user_data(self,df):
+        
+        df = self.clean_invalid_date(df,'date_of_birth')
+        df = self.clean_invalid_date(df,'join_date')  
+
+        df = df.dropna()
+        
+        df.drop(columns='index',inplace=True)
+        return df
+
+    def clean_invalid_date(self,df, column_name):
+        df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
+        return df
+
+
+
+
+
+'''
+import pandas as pd
 import database_utils as du
 
 init_data = du.DatabaseConnector('db_creds.yaml')
@@ -33,14 +59,13 @@ class DataCleaning:
         df = self.clean_invalid_date(df,'join_date')        
         df = df.dropna()
         df = df.drop(columns='index',inplace=True)
-        return df
+        print(df)
     
     def clean_invalid_date(self,df,column_name):
         df[column_name] = pd.to_datetime(df[column_name], format='%Y-%m-%d', errors='ignore')
         df[column_name] = pd.to_datetime(df[column_name], format='%Y %B %d', errors='ignore')
         df[column_name] = pd.to_datetime(df[column_name], format='%B %Y %d', errors='ignore')
         df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
-        df.dropna(subset = column_name,how='any',inplace= True)
         return df
 
 
@@ -48,13 +73,11 @@ init_data_cleaning = DataCleaning('legacy_users')
 cleaning_data = init_data_cleaning.clean_user_data()
 #checking_numeric_summery = init_data_cleaning.check_numeric_summery()
 #checking_data_type = init_data_cleaning.check_data_type()
-print(cleaning_data.dtypes)
+#print(cleaning_data)
 
 
-'''
-    def clean_invalid_date(self,df, column_name):
-        df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
-        return df
+-----------------------------
+
 
    # Identify NULL values
 null_values = df.isnull().sum()
