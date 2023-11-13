@@ -1,5 +1,7 @@
 import pandas as pd
 import tabula
+import requests
+
 
 class DataExtractor:
 
@@ -14,10 +16,30 @@ class DataExtractor:
     def retrieve_pdf_data(self,link):
         return pd.concat(tabula.read_pdf(link, pages='all'))            
 
+    def API_key(self):
+        return  {'x-api-key':'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
 
-init_data = DataExtractor()
-df_pdf = init_data.retrieve_pdf_data("https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf")
-print (df_pdf)
+    def list_number_of_stores(self):
+        api_url_base = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores'
+        response = requests.get(
+                                api_url_base,
+                                headers=self.API_key()
+                                )
+        return response.json()['number_stores']
+
+    def retrieve_stores_data(self):
+        list_of_frames = []
+        store_number  = self.list_number_of_stores()
+        for _ in range(store_number):
+            api_url_base = f'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{_}'
+            response = requests.get(
+                                    api_url_base,
+                                    headers=self.API_key()
+                                    )
+            list_of_frames.append( pd.json_normalize(response.json()))
+        return pd.concat(list_of_frames)
+
+
 
 '''
 import pandas as pd
@@ -44,5 +66,9 @@ db_connector = DataExtractor('legacy_users')
 df = db_connector.read_rds_table()
 print(df)
 
+#test the retrieve_pdf_data method
+init_data = DataExtractor()
+df_pdf = init_data.retrieve_pdf_data("https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf")
+print (df_pdf)
 
 '''
