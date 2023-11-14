@@ -50,7 +50,17 @@ class DataExtractor:
         else:
             print(f"Unsuccessful S3 get_object response. Status - {status}")
 
-
+    def extract_from_s3_by_link(self):
+        url = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json'
+        response = requests.get(url) 
+        dic      = response.json()
+        df       = pd.DataFrame([])
+        for column_name in dic.keys():
+            value_list = []
+            for _ in dic[column_name].keys():
+                value_list.append(dic[column_name][_])
+            df[column_name] = value_list
+        return df
 
 '''
 import pandas as pd
