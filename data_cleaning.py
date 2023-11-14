@@ -18,9 +18,14 @@ class DataCleaning:
         df.dropna(how="any", inplace =True)
         return df
 
-    def clean_invalid_date(self,df, column_name):
+    def clean_invalid_date(self,df,column_name):
+        df[column_name] = pd.to_datetime(df[column_name], format='%Y-%m-%d', errors='ignore')
+        df[column_name] = pd.to_datetime(df[column_name], format='%Y %B %d', errors='ignore')
+        df[column_name] = pd.to_datetime(df[column_name], format='%B %Y %d', errors='ignore')
         df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
+        df.dropna(subset = column_name,how='any',inplace= True)
         return df
+
 
     def called_clean_store_data(self,df):
         df.drop(columns='lat',inplace=True)
