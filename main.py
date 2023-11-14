@@ -88,13 +88,11 @@ def upload_orders_table():
 
 
 
-upload_orders_table()
 
 
 
 
-
-
+#upload_orders_table()
 #upload_dim_products()
 #upload_dim_store_details()    
 #upload_dim_card_details()
