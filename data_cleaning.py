@@ -63,6 +63,20 @@ class DataCleaning:
         else:
             np.nan
 
+    def check_math_operation(self,value):
+        if 'x' in value:
+            value.replace(' ','')
+            lis_factors = value.split('x')
+            return str(float(lis_factors[0])*float(lis_factors[1]))
+        return value
+
+    def isfloat(self,num):
+        try:
+            float(num)
+            return True
+        except ValueError:
+            return False
+
     def clean_products_data(self,df):
         df =  self.clean_invalid_date(df,'date_added')
         df.dropna(how='any',inplace= True)

@@ -49,18 +49,26 @@ def upload_dim_store_details():
     engine.connect()
     db.upload_to_db(df,'dim_store_details',engine)
 
-upload_dim_store_details()    
+def upload_dim_products():
+    de = DataExtractor()
+    db = DatabaseConnector()
+    dc = DataCleaning()  
+    # get data from s3
+    df =  de.extract_from_s3()
+    df =  dc.convert_product_weights(df,'weight')
+    # clean data 
+    df =  dc.clean_products_data(df)
+    print(df['product_price'].sum())
+   # upload to db 
+    engine = db.init_db_engine("db_creds_upload.yaml")
+    engine.connect()
+    db.upload_to_db(df,'dim_products',engine)
+    
+
+upload_dim_products()
 
 
 
-
-
-
-
-
-
-
-
-
+#upload_dim_store_details()    
 #upload_dim_card_details()
 #upload_dim_users()
