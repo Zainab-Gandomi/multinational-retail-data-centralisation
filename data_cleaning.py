@@ -83,6 +83,18 @@ class DataCleaning:
         df.reset_index(inplace=True)       
         return df
 
+    def clean_order_data(self,df):
+        df.drop(columns='1',inplace=True)
+        df.drop(columns='first_name',inplace=True)
+        df.drop(columns='last_name',inplace=True)
+        df.drop(columns='level_0',inplace=True)
+        df['card_number'] = df['card_number'].apply(self.isDigits)
+        df.dropna(how='any',inplace= True)
+        return df
+
+    def isDigits(self,num):
+        return str(num) if str(num).isdigit() else np.nan
+
 '''
 import pandas as pd
 import database_utils as du
