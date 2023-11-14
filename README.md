@@ -10,7 +10,7 @@ Key technologies used: *Postgres, AWS (s3), boto3, rest-API, csv, Python (Pandas
 
 1. **Data Extraction**: The "data_extraction.py" module houses methods dedicated to extracting data and storing it in Pandas DataFrames from various sources.
 
-2 .**Data Cleaning**: Within "data_cleaning.py," we construct the DataCleaning class responsible for cleansing different tables previously uploaded using the methods defined in "data_extraction.py."
+2. **Data Cleaning**: Within "data_cleaning.py," we construct the DataCleaning class responsible for cleansing different tables previously uploaded using the methods defined in "data_extraction.py."
 
 3. **Database Data Upload**: In "database_utils.py," we implement the DatabaseConnector class. This class initializes the database engine based on credentials provided in a ".yml" file, facilitating the process of uploading data into the database.
 
@@ -43,10 +43,11 @@ The date transformation process accommodates diverse time formats by addressing 
 
 
 '''
-df[column_name] = pd.to_datetime(df[column_name], format='%Y-%m-%d', errors='ignore')
-df[column_name] = pd.to_datetime(df[column_name], format='%Y %B %d', errors='ignore')
-df[column_name] = pd.to_datetime(df[column_name], format='%B %Y %d', errors='ignore')
-df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
+
+        df[column_name] = pd.to_datetime(df[column_name], format='%Y-%m-%d', errors='ignore')
+        df[column_name] = pd.to_datetime(df[column_name], format='%Y %B %d', errors='ignore')
+        df[column_name] = pd.to_datetime(df[column_name], format='%B %Y %d', errors='ignore')
+        df[column_name] = pd.to_datetime(df[column_name], errors='coerce')
 
 '''
 
