@@ -86,9 +86,22 @@ def upload_orders_table():
     engine.connect()
     db.upload_to_db(df,'orders_table',engine)
 
+def dim_date_times():
+    de = DataExtractor()
+    db = DatabaseConnector()
+    dc = DataCleaning()
+    df = de.extract_from_s3_by_link()
+    df.to_csv('dim_date_times.csv')
+    #clean data
+    df = dc.clean_date_time(df)
+    # upload to db 
+    engine = db.init_db_engine("db_creds_upload.yaml")
+    engine.connect()
+    db.upload_to_db(df,'dim_date_time',engine)
 
 
 
+dim_date_times()
 
 
 
