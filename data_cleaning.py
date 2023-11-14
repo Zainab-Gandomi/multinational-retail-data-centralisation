@@ -63,6 +63,12 @@ class DataCleaning:
         else:
             np.nan
 
+    def clean_products_data(self,df):
+        df =  self.clean_invalid_date(df,'date_added')
+        df.dropna(how='any',inplace= True)
+        df.reset_index(inplace=True)       
+        return df
+
 '''
 import pandas as pd
 import database_utils as du
