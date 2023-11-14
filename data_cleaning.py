@@ -31,6 +31,37 @@ class DataCleaning:
 
     def remove_char_from_string(self,value):
         return re.sub(r'\D', '',value)
+    
+
+    def convert_product_weights(self,df,column_name):
+        df[column_name] = df[column_name].apply(self.get_grams)
+        return df
+
+    def get_grams(self,value):
+        value = str(value)
+        value = value.replace(' .','')
+        if value.endswith('kg'):
+            value = value.replace('kg','')
+            value = self.check_math_operation(value)
+            return 1000*float(value) if self.isfloat(value) else np.nan
+        elif value.endswith('g'):   
+            value = value.replace('g','')
+            value = self.check_math_operation(value)
+            return float(value) if self.isfloat(value) else np.nan
+        elif value.endswith('ml'):   
+            value = value.replace('ml','')
+            value = self.check_math_operation(value)
+            return float(value) if self.isfloat(value) else np.nan
+        elif value.endswith('l'):   
+            value = value.replace('l','')
+            value = self.check_math_operation(value)
+            return 1000*float(value) if self.isfloat(value) else np.nan
+        elif value.endswith('oz'):   
+            value = value.replace('oz','')
+            value = self.check_math_operation(value)
+            return 28.3495*float(value) if self.isfloat(value) else np.nan
+        else:
+            np.nan
 
 '''
 import pandas as pd
