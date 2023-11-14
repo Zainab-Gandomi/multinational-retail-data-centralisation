@@ -86,7 +86,7 @@ def upload_orders_table():
     engine.connect()
     db.upload_to_db(df,'orders_table',engine)
 
-def dim_date_times():
+def upload_dim_date_times():
     de = DataExtractor()
     db = DatabaseConnector()
     dc = DataCleaning()
@@ -101,7 +101,7 @@ def dim_date_times():
 
 
 
-dim_date_times()
+upload_dim_date_times()
 
 
 
