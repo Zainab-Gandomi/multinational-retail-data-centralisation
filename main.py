@@ -65,10 +65,37 @@ def upload_dim_products():
     db.upload_to_db(df,'dim_products',engine)
     
 
-upload_dim_products()
+def upload_orders_table():
+    de = DataExtractor()
+    db = DatabaseConnector()
+    dc = DataCleaning()
+    # connect to db
+    engine = db.init_db_engine("db_creds.yaml")
+    engine.connect()
+    tables_list = db.list_db_tables(engine)
+    # get frame name and download
+    df_name = tables_list[2]
+    df = de.read_rds_table( engine, df_name)
+    df.to_csv('orders_table.csv')    
+    # clean data 
+    df = dc.clean_order_data(df)
+    #print(df.info())
+    print(df['product_quantity'].sum())
+   # upload to db 
+    engine = db.init_db_engine("db_creds_upload.yaml")
+    engine.connect()
+    db.upload_to_db(df,'orders_table',engine)
 
 
 
+upload_orders_table()
+
+
+
+
+
+
+#upload_dim_products()
 #upload_dim_store_details()    
 #upload_dim_card_details()
 #upload_dim_users()
