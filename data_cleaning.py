@@ -108,6 +108,19 @@ class DataCleaning:
         df.dropna(how='any',inplace= True)
         df.reset_index(inplace=True)       
         return df
+    
+if __name__ == '__main__':  
+
+    dc = DataCleaning()
+
+    print(str(dc.get_grams('1kg')))
+    print(str(dc.get_grams('1g')))
+    print(str(dc.get_grams('1l')))
+    print(str(dc.get_grams('1ml')))
+    print('l1'.isdigit())
+    print(str(dc.get_grams('l1ml')))   
+
+
 
 '''
 import pandas as pd
