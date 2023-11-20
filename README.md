@@ -233,11 +233,13 @@ now update the rest of column with following code as example:
 Add foreign and primary keys in connected tables.
 
 '''
+
         ALTER TABLE dim_products
             ADD PRIMARY KEY (product_code);
         ALTER TABLE orders_table 
             ADD FOREIGN KEY(product_code) 
             REFERENCES dim_products(product_code);
+            
 
 '''
 
