@@ -81,6 +81,7 @@ following SQL syntax is used to change the data types to correspond to those see
 +------------------+--------------------+--------------------+
 
 '''
+
         -- Change data type of date_uuid to UUID
         ALTER TABLE orders_table
         ALTER COLUMN date_uuid TYPE UUID USING date_uuid::UUID;
