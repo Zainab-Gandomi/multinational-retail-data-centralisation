@@ -120,6 +120,7 @@ Step 2: Drop the lat column
 Step 3: Set the data types for column
 
 '''
+
         UPDATE dim_store_details
         SET latitude = COALESCE(lat, latitude);
 
@@ -128,6 +129,7 @@ Step 3: Set the data types for column
 
         ALTER TABLE dim_store_details
         ALTER COLUMN latitude TYPE float8 USING latitude::double precision;
+
 '''
 
 The rest of column typ in store details table is changed with same method as order table.
@@ -238,3 +240,40 @@ Add foreign and primary keys in connected tables.
             REFERENCES dim_products(product_code);
 
 '''
+
+# Mileston 3
+
+## SQL Queries
+
+
+As primary and foreign keys are settled and data are clean, writing queries can be started in database.
+
+1. How many stores do the business have and in which countries?
+
+'''
+
+SELECT country_code, 
+	COUNT (*) 
+FROM dim_store_details 
+GROUP BY country_code;
+
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
