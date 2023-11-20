@@ -261,7 +261,7 @@ As primary and foreign keys are settled and data are clean, writing queries can 
 
 '''
 
-![](C:\Users\zainab\Pictures\Screenshots\Screenshot(598).png)
+![Screenshot (598)](https://github.com/Zainab-Gandomi/multinational-retail-data-centralisation/assets/79536268/727bf00e-3331-4834-9702-1840b5f759b1)
 
 
 
