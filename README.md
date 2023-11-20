@@ -239,7 +239,7 @@ Add foreign and primary keys in connected tables.
         ALTER TABLE orders_table 
             ADD FOREIGN KEY(product_code) 
             REFERENCES dim_products(product_code);
-            
+
 
 '''
 
@@ -254,14 +254,14 @@ As primary and foreign keys are settled and data are clean, writing queries can 
 
 '''
 
-SELECT country_code, 
-	COUNT (*) 
-FROM dim_store_details 
-GROUP BY country_code;
+        SELECT country_code, COUNT (*) 
+        FROM dim_store_details 
+        GROUP BY country_code;
+
 
 '''
 
-
+![](C:\Users\zainab\Pictures\Screenshots\Screenshot(598).png)
 
 
 
