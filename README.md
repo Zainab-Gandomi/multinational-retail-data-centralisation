@@ -148,7 +148,6 @@ Remove £ character from the product_price column:
 
 The team that handles the deliveries would like a new human-readable column added for the weight so they can quickly make decisions on delivery weights.New column weight_class which contain human-readable values based on the weight range of the product.
 
-'''
 
 +--------------------------+-------------------+
 | weight_class VARCHAR(?)  | weight range(kg)  |
@@ -159,7 +158,6 @@ The team that handles the deliveries would like a new human-readable column adde
 | Truck_Required           | => 140            |
 +----------------------------+-----------------+
 
-'''
 
 Add a new column weight_class based on weight ranges:
 
