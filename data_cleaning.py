@@ -14,7 +14,7 @@ class DataCleaning:
     def clean_card_data(self,df):
         df['card_number'] = df['card_number'].apply(str)
         df['card_number'] = df['card_number'].replace("?", "")
-        df = self.clean_invalid_date(df,'date_payment_confirmed')  
+        df = self.clean_invalid_date(df,'date_payment_confirmed')   
         df.dropna(how="any", inplace =True)
         return df
 
@@ -28,7 +28,7 @@ class DataCleaning:
 
 
     def called_clean_store_data(self,df):
-        df.drop(columns='lat',inplace=True)
+        #df.drop(columns='lat',inplace=True)
         df =  self.clean_invalid_date(df,'opening_date')                     
         df['staff_numbers'] =  pd.to_numeric( df['staff_numbers'].apply(self.remove_char_from_string),errors='coerce', downcast="integer") 
         df.dropna(subset = ['staff_numbers'],how='any',inplace= True)
@@ -83,8 +83,8 @@ class DataCleaning:
             return False
 
     def clean_products_data(self,df):
-        df =  self.clean_invalid_date(df,'date_added')
-        df.dropna(how='any',inplace= True)
+        df = self.clean_invalid_date(df,'date_added')
+        #df.dropna(how='any',inplace= True)
         df.reset_index(inplace=True)       
         return df
 
