@@ -283,6 +283,8 @@ As primary and foreign keys are settled and data are clean, writing queries can 
 3. Which months produce the most sales overall time of records?
 
 '''
+
+
         SELECT 	dim_date_times.month, 
         ROUND(sum(orders_table.product_quantity*dim_products.product_price)) AS total_revenue
         FROM orders_table
