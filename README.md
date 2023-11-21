@@ -261,21 +261,182 @@ As primary and foreign keys are settled and data are clean, writing queries can 
 
 '''
 
-![Screenshot (598)](https://github.com/Zainab-Gandomi/multinational-retail-data-centralisation/assets/79536268/727bf00e-3331-4834-9702-1840b5f759b1)
+![Screenshot (601)](https://github.com/Zainab-Gandomi/multinational-retail-data-centralisation/assets/79536268/8ca9c441-a47f-4268-8319-660ed02f5855)
+
+
+2. Which locations have the most stores?
+
+'''
+
+        SELECT locality, 
+            COUNT (*) 
+        FROM dim_store_details 
+        GROUP BY locality	
+        ORDER BY COUNT(*) DESC;
+
+'''
+
+![Screenshot (602)](https://github.com/Zainab-Gandomi/multinational-retail-data-centralisation/assets/79536268/e9833b05-e542-4678-ab3f-587c14940608)
 
 
 
+3. Which months produce the most sales overall time of records?
+
+'''
+        SELECT 	dim_date_times.month, 
+        ROUND(sum(orders_table.product_quantity*dim_products.product_price)) AS total_revenue
+        FROM orders_table
+            JOIN dim_date_times ON  orders_table.date_uuid = dim_date_times.date_uuid
+            JOIN dim_products ON  orders_table.product_code = dim_products.product_code
+        GROUP BY dim_date_times.month
+        ORDER BY sum(orders_table.product_quantity*dim_products.product_price) DESC;
+
+
+'''
+
+
+![Screenshot (603)](https://github.com/Zainab-Gandomi/multinational-retail-data-centralisation/assets/79536268/0ae6cfae-863a-48c3-a437-de9c1186e4e3)
 
 
 
+4. How many sales are coming from online?
+
+'''
+
+        SELECT COUNT (orders_table.product_quantity) AS numbers_of_sales,
+            sum(orders_table.product_quantity) AS product_quantity_count,
+            CASE 
+                WHEN dim_store_details.store_code = 'WEB-1388012W' then 'Web'
+            ELSE 'Offline'
+            END AS product_location
+        FROM orders_table
+            JOIN dim_date_times ON  orders_table.date_uuid = dim_date_times.date_uuid
+            JOIN dim_products ON orders_table.product_code = dim_products.product_code
+            JOIN dim_store_details ON orders_table.store_code = dim_store_details.store_code
+        GROUP BY product_location
+        ORDER BY sum(orders_table.product_quantity) ASC;
+
+'''
+
+
+![Screenshot (604)](https://github.com/Zainab-Gandomi/multinational-retail-data-centralisation/assets/79536268/5ccb1131-cd6b-484f-8207-9c18e92a5233)
 
 
 
+5. What percentage of sales comE through each type of store?
+
+'''
+
+        select 	dim_store_details.store_type, 
+                round(sum (orders_table.product_quantity*dim_products.product_price)) as revenue,
+                round(sum(100.0*orders_table.product_quantity*dim_products.product_price)/(sum(sum(orders_table.product_quantity*dim_products.product_price)) over ())) AS percentage_total
+        from orders_table
+            join dim_date_times on  orders_table.date_uuid = dim_date_times.date_uuid
+            join dim_products on  orders_table.product_code = dim_products.product_code
+            join dim_store_details on orders_table.store_code = dim_store_details.store_code
+        group by dim_store_details.store_type
+        ORDER BY percentage_total DESC;
+
+'''
+
+
+![Screenshot (605)](https://github.com/Zainab-Gandomi/multinational-retail-data-centralisation/assets/79536268/82701d4c-b983-40bc-93ea-544ac3efec36)
 
 
 
+6.Which month in each year produced the highest cost of sales?
+
+'''
+
+        select  dim_date_times.year,
+                dim_date_times.month, 
+                round(sum(orders_table.product_quantity*dim_products.product_price)) as revenue
+        from orders_table
+            join dim_date_times    on  orders_table.date_uuid    = dim_date_times.date_uuid
+            join dim_products      on  orders_table.product_code = dim_products.product_code
+            join dim_store_details on orders_table.store_code    = dim_store_details.store_code
+        group by 	dim_date_times.month,
+                    dim_date_times.year
+        ORDER BY    sum(orders_table.product_quantity*dim_products.product_price)  DESC;
+
+'''
+
+
+![Screenshot (606)](https://github.com/Zainab-Gandomi/multinational-retail-data-centralisation/assets/79536268/d64706c6-477d-45bd-9e2d-96406a2cbb9e)
+
+
+7.What is our staff headcount?
+
+'''
+
+        select  sum(dim_store_details.staff_numbers) as total_staff_numbers, 
+            dim_store_details.country_code
+        from dim_store_details
+        group by dim_store_details.country_code
+
+
+''
+
+![Screenshot (607)](https://github.com/Zainab-Gandomi/multinational-retail-data-centralisation/assets/79536268/2fcfa20f-e2d8-41b6-9d64-129bcf2ef381)
 
 
 
+8.which german store type is selling the most?
+
+'''
+
+        select  round(count(orders_table.date_uuid)) as sales, 
+                dim_store_details.store_type, 
+                dim_store_details.country_code
+        from orders_table
+            join dim_date_times    on orders_table.date_uuid    = dim_date_times.date_uuid
+            join dim_products      on orders_table.product_code = dim_products.product_code
+            join dim_store_details on orders_table.store_code   = dim_store_details.store_code
+        where dim_store_details.country_code = 'DE'
+        group by 	dim_store_details.store_type,dim_store_details.country_code
+
+
+'''
+
+
+![Screenshot (608)](https://github.com/Zainab-Gandomi/multinational-retail-data-centralisation/assets/79536268/fa523c69-0a5b-4c82-9bee-85e58560f862)
+
+
+
+9.How quickly is the company making sales?
+
+'''
+
+        ALTER TABLE dim_date_times
+        ADD COLUMN time_diff interval;
+
+        UPDATE dim_date_times
+        SET time_diff = x.time_diff
+        FROM (
+        SELECT timestamp, timestamp - LAG(timestamp) OVER (ORDER BY timestamp) AS time_diff
+        FROM dim_date_times
+        ) AS x
+        WHERE dim_date_times.timestamp = x.timestamp;
+
+'''
+
+After creation of column time difference, task query much more straightforward
+
+'''
+
+        select  dim_date_times.year, 		  
+            concat('"hours": ',EXTRACT(hours FROM  avg(dim_date_times.time_diff)),' ',
+                '"minutes": ',EXTRACT(minutes FROM  avg(dim_date_times.time_diff)),' ',		  
+                '"seconds": ',round(EXTRACT(seconds FROM  avg(dim_date_times.time_diff)),2),' '		  
+                ) as actual_time_taken		 		  
+        from dim_date_times
+        group by dim_date_times.year
+        order by avg(dim_date_times.time_diff) desc
+
+
+'''
+
+
+![Screenshot (609)](https://github.com/Zainab-Gandomi/multinational-retail-data-centralisation/assets/79536268/6418b5ef-9444-4ca9-ad74-884052a4aead)
 
 

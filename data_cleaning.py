@@ -6,8 +6,8 @@ class DataCleaning:
     
     def clean_user_data(self,df):
         df = self.clean_invalid_date(df,'date_of_birth')
-        df = self.clean_invalid_date(df,'join_date')  
-        df = df.dropna()
+        df = self.clean_invalid_date(df,'join_date') 
+        df = self.clean_NaNs_Nulls_misses(df) 
         df.drop(columns='index',inplace=True)
         return df
     
