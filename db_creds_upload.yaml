@@ -1,7 +1,0 @@
-database_type : postgresql
-dbapi : psycopg2
-RDS_HOST : localhost
-RDS_USER : postgres
-RDS_PASSWORD : Alireza13
-RDS_DATABASE : sales_data
-RDS_PORT : 5432
